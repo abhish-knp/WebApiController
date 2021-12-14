@@ -3,7 +3,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
+
+=======
 using System.Threading.Tasks;
+>>>>>>> 4cb88d7b76784481afd5f1e90cb5c44200eae82d
 
 namespace WebApiController.Controllers
 {
