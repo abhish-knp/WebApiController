@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,13 @@ namespace WebApiController.Controllers
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
-            this._logger.LogInformation(nameof(WeatherForecastController) + $" is created.");
+            // this._logger.LogInformation(nameof(WeatherForecastController) + $" is created.");
         }
 
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            this._logger.LogInformation(nameof(WeatherForecastController) + $".Get() is called.");
+            // this._logger.LogInformation(nameof(WeatherForecastController) + $".Get() is called.");
 
             var rng = new Random();
             int id = 0;
@@ -42,7 +43,7 @@ namespace WebApiController.Controllers
         [HttpGet("{id}")]
         public ActionResult<WeatherForecast> GetByID(int id)
         {
-            this._logger.LogInformation(nameof(WeatherForecastController) + $".GetByID(int id) is called.");
+            //this._logger.LogInformation(nameof(WeatherForecastController) + $".GetByID(int id) is called.");
 
             var rng = new Random();
             var record = new WeatherForecast
@@ -50,7 +51,7 @@ namespace WebApiController.Controllers
                 ID = id,
                 Date = DateTime.Now.AddDays(id),
                 TemperatureC = (2 * id),
-                Summary = Summaries[rng.Next(Summaries.Length)]
+                Summary = Summaries[id]
             };
 
             var result = Ok(record);
@@ -58,6 +59,50 @@ namespace WebApiController.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        [Route("public")]
+        public IActionResult Public( string name)
+        {
+            return Ok(new
+            {
+                Message = $"Hello,{name} from a public endpoint! You don't need to be authenticated to see this."
+            });
+        }
+
+        //[HttpGet("private")]
+        //[Authorize]
+        //public IActionResult Private()
+        //{
+        //    return Ok(new
+        //    {
+        //        Message = "Hello from a private endpoint! You need to be authenticated to see this."
+        //    });
+        //}
+
+        //[HttpGet("private-scoped")]
+        //[Authorize("read:messages")]
+        //public IActionResult Scoped()
+        //{
+        //    return Ok(new
+        //    {
+        //        Message = "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this."
+        //    });
+        //}
+
+        //// This is a helper action. It allows you to easily view all the claims of the token.
+        //[HttpGet("claims")]
+        //public IActionResult Claims()
+        //{
+        //    return Ok(User.Claims.Select(c =>
+        //        new
+        //        {
+        //            c.Type,
+        //            c.Value
+        //        }));
+        //}
+
+
 
         // POST api/values
         [HttpPost]
